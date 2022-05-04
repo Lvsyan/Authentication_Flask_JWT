@@ -5,8 +5,14 @@ export const Register = () => {
 
   const sendUserInfo = async () => {
     const response = await fetch(
-      "https://3001-4geeksacade-reactflaskh-xywfzrlnq5x.ws-eu43.gitpod.io/"
+      "https://3001-4geeksacade-reactflaskh-xywfzrlnq5x.ws-eu43.gitpod.io/api/register",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(user),
+      }
     );
+    const data = await response.json();
   };
 
   return (
