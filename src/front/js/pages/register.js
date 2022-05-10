@@ -1,11 +1,13 @@
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 
 export const Register = () => {
   const [user, setUser] = useState({});
+  const history = useHistory();
 
   const sendUserInfo = async () => {
     const response = await fetch(
-      "https://3001-4geeksacade-reactflaskh-xywfzrlnq5x.ws-eu43.gitpod.io/api/register",
+      "https://3001-4geeksacade-reactflaskh-xywfzrlnq5x.ws-eu44.gitpod.io/api/register",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -13,6 +15,9 @@ export const Register = () => {
       }
     );
     const data = await response.json();
+    if (data.created) {
+      history.push("/login");
+    }
   };
 
   return (

@@ -40,4 +40,7 @@ def login_user():
 def private():
     current_user_id = get_jwt_identity()
     user = User.query.get(current_user_id)
-    return jsonify({"user": user.serialize()}), 200
+    if user:
+        return jsonify({ "logged_in": True, "user": user.serialize() }), 200
+    else:
+        return jsonify({ "logged_in": False}, 400)

@@ -1,44 +1,34 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
+import { Context } from "../store/appContext";
 
 export const Login = () => {
+  const { actions } = useContext(Context);
   const [user, setUser] = useState({});
   const history = useHistory();
 
-  useEffect(() => {
-    privateInfo();
-  }, []);
-
-  const privateInfo = async () => {
-    const response = await fetch(
-      "https://3001-4geeksacade-reactflaskh-xywfzrlnq5x.ws-eu43.gitpod.io/api/private",
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.getItem("x"),
-        },
+  const login = async () => {
+    try {
+      const response = await fetch(
+        "https://3001-4geeksacade-reactflaskh-xywfzrlnq5x.ws-eu44.gitpod.io/api/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(user),
+        }
+      );
+      const data = await response.json();
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+        actions.verify();
+        history.push("/private");
+      } else {
+        alert("Hola");
       }
-    );
-    const data = await response.json();
-    if (response.ok) {
-      history.push("/private");
-    }
-  };
-
-  const sendUserInfo = async () => {
-    const response = await fetch(
-      "https://3001-4geeksacade-reactflaskh-xywfzrlnq5x.ws-eu43.gitpod.io/api/login",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(user),
-      }
-    );
-    const data = await response.json();
-    if (response.ok) {
-      localStorage.setItem("x", data.token);
-      history.push("/private");
+    } catch (e) {
+      console.log(e);
     }
   };
 
@@ -61,7 +51,7 @@ export const Login = () => {
           className="col-3"
           onChange={(e) => setUser({ ...user, password: e.target.value })}
         ></input>
-        <button className="col-2 offset-1" onClick={() => sendUserInfo()}>
+        <button className="col-2 offset-1" onClick={() => login()}>
           Login user
         </button>
       </div>
